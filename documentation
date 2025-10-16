@@ -1,0 +1,105 @@
+1) Features
+
+Pure NumPy implementation—zero external ML dependencies.
+
+Single hidden layer MLP with sigmoid activations.
+
+Batch gradient descent (full-batch) with a fixed learning rate.
+
+Deterministic via np.random.seed(1).
+
+Console telemetry: loss logged every 100 epochs. 
+
+ArtificialNeuralNetwork
+
+2) System Requirements
+
+Python 3.8+
+
+NumPy
+
+
+3) Quick Start
+python ArtificialNeuralNetwork.py
+
+
+You should see loss values every 100 epochs and a final prediction for the test input [[7, 8]] (target ≈ 9).
+
+
+  How It Works
+Data
+
+Inputs (X): six 2-D samples [[1,2], [2,3], …, [6,7]]
+
+Targets (y): the “next” scalar [[3], [4], …, [8]]
+This is a toy regression-like mapping learned through a bounded sigmoid output. 
+
+ArtificialNeuralNetwork
+
+Network Topology
+
+Input: 2 neurons
+
+Hidden: 3 neurons (sigmoid)
+
+Output: 1 neuron (sigmoid) 
+
+ArtificialNeuralNetwork
+
+Forward Pass
+
+hidden_input = X @ W1 + b1
+
+hidden_output = sigmoid(hidden_input)
+
+final_input = hidden_output @ W2 + b2
+
+final_output = sigmoid(final_input) 
+
+ArtificialNeuralNetwork
+
+Loss
+
+Mean Squared Error (MSE): mean((y - final_output)^2), logged every 100 epochs. 
+
+ArtificialNeuralNetwork
+
+Backpropagation (Gradient Flow)
+
+Output delta: d_output = (y - ŷ) * sigmoid_derivative(ŷ)
+
+Hidden error: error_hidden = d_output @ W2.T
+
+Hidden delta: d_hidden = error_hidden * sigmoid_derivative(h)
+
+Parameter updates (gradient ascent style using += learning_rate * gradient—equivalent to descent because gradients point toward reducing error under the chosen sign convention):
+
+W2 += h.T @ d_output; b2 += sum(d_output)
+
+W1 += X.T @ d_hidden; b1 += sum(d_hidden) 
+
+ArtificialNeuralNetwork
+
+5) Configuration Knobs
+
+Inside the script you can tune:
+
+hidden_layer_neurons = 3
+
+learning_rate = 0.01
+
+epochs = 1000
+
+Weight initialization (currently np.random.rand). Consider np.random.randn * 0.1 for symmetric zero-mean starts. 
+
+ArtificialNeuralNetwork
+
+Tip: For faster convergence, try learning_rate = 0.1 with scaled weight init; monitor loss stability.
+
+6) Evaluation & Expected Output
+
+The script prints:
+
+Loss at epochs 0, 100, 200, …, 900
+
+A prediction for test_input = [[7, 8]] (should be close to 9, bounded by sigmoid near (0,1) scale). Example:
